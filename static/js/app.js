@@ -5,7 +5,7 @@ var tableData = data;
 
 
 let tbody = d3.select("tbody");
-
+var filterButton = d3.select("#filter-btn");
 
 function buildTable(data){
     // Start By Clearing Existing Data
@@ -23,69 +23,67 @@ function buildTable(data){
     })
 }
 
+buildTable(tableData);
+ 
+  
 
-// Triggers a Function When the datetime Button is clicked
-function handleClick(){
-    // Prevents the Page from Refreshing
+
+
+
+
+
+
+// Listen for events
+filterButton.on("click", function() {
     d3.event.preventDefault();
     
-    let date = d3.select("#datetime").property("value");
-    let city = d3.select("#city").property("value").toLowercase();
-    let state = d3.select("#state").property("value").toLowercase();
-    let country = d3.select("#country").property("value").toLowercase();
-    let shape = d3.select("#shape").property("value");
+    // Get date input
+    var dateInput = d3.select("#datetime").property("value");
+    var cityInput = d3.select("#city").property("value").toLowerCase();
+    var stateInput = d3.select("#state").property("value").toLowerCase();
+    var countryInput = d3.select("#country").property("value").toLowerCase();
+    var shapeInput = d3.select("#shape").property("value").toLowerCase();
 
-    let anotherdata = tableData;
+    // Filter the table with multiple input filters
+    filteredTableData = tableData;
+    if(dateInput) {
+        filteredTableData = filteredTableData.filter(ufodata => ufodata.datetime === dateInput);
+    };
+    if(cityInput) {
+        filteredTableData = filteredTableData.filter(ufodata   => ufodata.city === cityInput);
+    };
+    if(stateInput) {
+        filteredTableData = filteredTableData.filter(ufodata => ufodata.state === stateInput);
+    };
+    if(countryInput) {
+        filteredTableData = filteredTableData.filter(ufodata => ufodata.country === countryInput);
+    };
+    if(shapeInput) {
+        filteredTableData = filteredTableData.filter(ufodata => ufodata.shape === shapeInput);
+    };
 
-    // Check if a Date was Entered & Filter Data Using that Date;
-    if(date) {
-        // Apply Filter to the Table Data to Only Keep Rows Where datetime Value Matches the Filter Value
-        filterDate = anotherdata.filter((re) => re.datetime === date);
-    }
-    // Build Table with Filtered Data
-     //buildTable(filterData);
+    // Clear the current table
+    tableBody.text("");
 
-   if(city) {
+    // Enter the filtered table
+    filteredTableData.forEach(function(sigthing) {
+        var row = tbody.append('tr'); // one row per sighting
+        Object.entries(sigthing).forEach(function([key, value]) {
+            tbody.append('td').text(value);
+        });
+    });
 
-    filtercity = filterData.filter((re) => re.city === city);
-
-
-
-   }
-
-   if(state) {
-
-    filterstate = filtercity.filter((re) => re.state === state);
-
-      }
-
-
-    if(country) {
-
-        filtercountry = filterstate.filter((re) => re.country === country);
-    
-          }
-
-    if(shape) {
-
-        filtershape = filtercountry.filter((re) => re.shape === shape);
-        
-    }
+});
 
 
 
 
-buildTable(filtershape);
 
 
-}
+//66k lines, too much to show limited to 200
+//buildTable(filteeredData).slice(0,30)
+//buildTable(filtershape);
+//d3.selectAll("#filter-btn").on("click", handleClick);
 
 
-
-
-d3.selectAll("#filter-btn").on("click", handleClick);
-
-
-
-// Build Table with data.js 
-buildTable(tableData);
+ 
