@@ -1,7 +1,7 @@
 # javascript-challenge-ucsd
 
 
-##output data to table is here :-
+## output data to table is here :-
 
 
 
